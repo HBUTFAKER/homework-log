@@ -123,6 +123,8 @@
 
 ## 九、开工须知
 
+**零、代码来源**：`git clone https://github.com/HBUTFAKER/homework-log.git`。仓库根就是项目本体（`index.html` 在根），`main` 为最新代码，`tag-old-main` 是旧目录结构备份、别用。
+
 **一、先读这三处**
 1. 本文档
 2. `index.html` 第 560—640 行：`KEY` / `SUBJECTS` / 标签池 / `db` 结构 / `ui` 状态。整个项目的地基就这 80 行。
@@ -145,5 +147,4 @@ python -m http.server 8080
 - 只做语法检查不算验证。Service Worker 会骗人：测新代码用无痕窗口，或 DevTools 勾 `Disable cache` + Application 里 Unregister。
 
 **环境未知项**
-- 新机器有没有 Python / Node：【待确认】
-- 重新部署后是否复用原域名 `homework-log-39980`：【待确认】
+- 新机器有没有 Python / Node：【待确认】。重新部署后是否复用原域名 `homework-log-39980`：【待确认】
