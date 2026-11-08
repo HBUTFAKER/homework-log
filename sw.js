@@ -1,5 +1,5 @@
 /* 作业登记 - 离线缓存 */
-const CACHE = 'hwbook-v9';
+const CACHE = 'hwbook-v20';
 const ASSETS = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-180.png'];
 
 self.addEventListener('install', e => {
