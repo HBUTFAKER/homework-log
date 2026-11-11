@@ -1609,6 +1609,16 @@ function detectSubject(line,strict){
   if(/作文|日记|周记|阅读|摘抄|练字|写字|生字/.test(line))return '语文';
   return '其他';
 }
+/* 只认行首的科目标签：「【英语】」「[英语]」「英语：」「英语:」。
+   正文里出现「语文」两字不算换科，比如「订正语文课发的英语卷子」仍是英语。 */
+function leadingSubject(t){
+  const s=String(t||'').trim();
+  const b=s.match(/^[【\[]\s*([^】\]]{1,8})\s*[】\]]/);
+  if(b&&SUBJECTS.indexOf(b[1].trim())>=0)return b[1].trim();
+  const c=s.match(/^([\u4e00-\u9fa5]{2,6})\s*[:：]/);
+  if(c&&SUBJECTS.indexOf(c[1])>=0)return c[1];
+  return null;
+}
 function stripSubject(line,subject){
   let t=line;
   // 【语文】 / [语文] / 语文： / 语文: 
@@ -1657,10 +1667,12 @@ function parseHomework(raw,base){
     if(/今日作业|作业清单|作业安排|各科作业|家庭作业|课后作业|作业内容/.test(t)&&t.length<=24)return;
     // 去掉过长的一整段废话（如"各位家长"）
     if(/家长|通知|提醒|请注意/.test(t)&&t.length>18)return;
-    // 科目：明写了就用；没写就跟着上面那一科走（作业单都是按科分组的）；实在没有才靠关键词猜
-    const strictSub=detectSubject(t,true);
+    // 只有行首明写科目才单独改科；其余一律归到面板里选的那一科。
+    // 旧逻辑全行找学科名，正文里出现「语文」两字就把整批英语作业带偏，还会污染后面的行。
+    const lead=leadingSubject(t);
     let subject;
-    if(strictSub!=='其他'){subject=strictSub;lastSubj=strictSub}
+    if(lead){subject=lead;lastSubj=lead}
+    else if(base)subject=base;
     else if(lastSubj)subject=lastSubj;
     else subject=detectSubject(t,false);
     if(subject==='其他'&&base)subject=base;
